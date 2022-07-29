@@ -151,8 +151,22 @@
             pc.ontrack = event => {
                 const stream = event.streams[0]
 
-                
+                if(!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id){
+                    remoteVideo.srcObject = stream
+                }
             }
+
+
+            /*
+                Agora vamos pegar o device (webcam ou microfone)
+            */
+            navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+            }).then(stream => {
+                localVideo.srcObject = stream  // srcObject é o stream que esta sendo passado via webcam e microfone
+                stream.getTracks().forEach(track=>pc.addTrack(track,stream))
+            }, onError)
 
 
 
