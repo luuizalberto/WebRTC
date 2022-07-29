@@ -1,2 +1,2 @@
 # WebRTC
-Criando sistema de chat em vídeo
+Criando sistema de chat e vídeo
