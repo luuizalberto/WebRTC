@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='https://cdn.scaledrone.com/scaledrone.min.js' type='text/javascript'></script>
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        /* .welcome{
+            text-align: center;
+            padding: 10px 0;
+        } */
+
+        body{
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            padding: 0 50px;
+        }
+
+        video{
+            max-width: calc(50% - 100px);
+            margin: 0 50px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 0;
+            border: 1px solid #ccc;
+        }
+
+        .title{
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+        }
+    </style>
+
+
+    <!-- <div class="welcome">
+        <h2>Bem vindo ao nosso Chat em tempo real!</h2>
+    </div> -->
+
+    <div class="title">Bem vindo ao nosso Chat em tempo real!</div>
+
+    <video src="" id="localVideo" autoplay muted></video>
+    <video src="" id="remoteVideo" autoplay muted></video>
+
+
+    <script>
+        // Inicio ScaleDrone e WebRTC
+        if(!location.hash){
+            location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16)
+        }
+
+        const roomHash = location.hash.substring(1)
+
+        const drone = new ScaleDrone('yiS12Ts5RdNhebyM') // este ID é fornecido pelo scaledrone só para testes
+
+        
+        // Agora vamos rastrear quando alguem entra na sala
+        const roomName = 'observable-'+roomHash;
+
+        /*
+            proximo passo é um servidor de referencia para a conexão - o proprio google fornece
+        */
+        const configuration = {
+
+            iceServers:[
+
+                {
+                    urls: 'stun:stun.l.google.com:19302'
+                }
+
+            ]
+
+        }
+
+        let room
+        let pc
+
+        let number = 0
+
+        function OnSuccess(){}
+
+        function onError(error){
+            console.log(error)
+        }
+
+
+        /*
+            Agora vamos começar a detectar quem entra na sala
+        */
+        drone.on('open', error => {
+            if(error){
+                return console.log(error)
+            }
+
+            room = drone.subscribe(roomName)// se nao acontecer nenhum erro, a gente vai receber todos os eventos referente do id da sala.
+
+            room.on('open', error => {
+                // se acontecer erro, capturamos aqui!
+            })
+
+            // Evento quando alguem entra na sala.
+            room.on('members', members => {
+                // quando alguem se conecta na sala!
+                console.log('Conectado!')
+
+                console.log("Conexões abertas: "+members.length)
+            })
+        })
+
+
+    </script>
+    
+</body>
+</html>
