@@ -1,5 +1,5 @@
-# WebRTC
-Criando sistema de chat e vídeo
+# Sistema de chat e vídeo
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/luuizalberto/React-Native-Insider4.0/blob/main/LICENSE)
 
 Basicamente estou utilizando o scaledrone para ter os eventos que a gente tem quando: usuário entra, troca de informação etc. 
 E o RTCPeerConnection para ficar realizando as trocas de informações.
