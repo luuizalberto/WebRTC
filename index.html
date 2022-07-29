@@ -168,8 +168,42 @@
                 stream.getTracks().forEach(track=>pc.addTrack(track,stream))
             }, onError)
 
+            /*
+                Agora vamos rastrear quando alguem sai da nossa sala
+            */
+            room.on('member_leave',function(member){
+                // Usuário saiu!
+                remoteVideo.style.display = "none"
+            })
+
+            /*
+                Evento para troca de informações
+            */
+            room.on('data',(message, client)=>{
+                
+                if(client.id === drone.clientId){
+                    return // para não mandar informação para nós mesmo.
+                } 
+
+                if(message.sdp){
+                    pc.setRemoteDescription(new RTCSessionDescription(message.sdp), () => {
+                        if(pc.remoteDescription.type === 'offer'){
+                            pc.createAnswer().then(localDescCreated).catch(onError)
+                        }
+                    }, onError)
+                }else if(message.candidate){
+                    pc.addIceCandidate(
+                        new RTCIceCandidate(message.candidate), OnSuccess, onError
+                    )
+                }
+            })
+        }
 
 
+        function localDescCreated(desc){
+            pc.setLocalDescription(
+                desc, () => sendMessage({'sdp': pc.localDescription}), onError
+            )
         }
 
 
