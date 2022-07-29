@@ -110,11 +110,44 @@
             // Evento quando alguem entra na sala.
             room.on('members', members => {
                 // quando alguem se conecta na sala!
-                console.log('Conectado!')
+                // console.log('Conectado!')
+                // console.log("Conexões abertas: "+members.length)
+                number = members.length - 1
+                const isOfferer = members.length >= 2
 
-                console.log("Conexões abertas: "+members.length)
+                startWebRTC(isOfferer) // Aqui está o coração
             })
         })
+
+        function sendMessage(message){
+            drone.publish({
+                room: roomName,
+                message
+            })
+        }
+
+        
+        function startWebRTC(isOfferer){
+
+
+            pc = new RTCPeerConnection(configuration)
+
+            pc.onicecandidate = event => {
+                if(event.candidate){
+                    sendMessage({'candidate':event.candidate})
+                }
+            }
+
+            if(isOfferer){
+                pc.onnegotiationneeded = () => {
+                    
+                }
+            }
+
+
+
+        }
+
 
 
     </script>
