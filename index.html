@@ -140,8 +140,18 @@
 
             if(isOfferer){
                 pc.onnegotiationneeded = () => {
-                    
+                    pc.createOffer().then(localDescCreated).catch(onError)
                 }
+            }
+
+
+            /*
+                Agora vamos mostrar no frontend
+            */
+            pc.ontrack = event => {
+                const stream = event.streams[0]
+
+                
             }
 
 
